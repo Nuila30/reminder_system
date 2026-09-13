@@ -1,0 +1,172 @@
+.document-form-card {
+  overflow: hidden;
+
+  border: 1px solid var(--border);
+  border-radius: 12px;
+
+  background: #fff;
+}
+
+.form-section {
+  padding: 26px;
+
+  border-bottom:
+    1px solid #eee;
+}
+
+.form-section-header {
+  display: flex;
+
+  gap: 14px;
+
+  margin-bottom: 24px;
+}
+
+.form-section-header > span {
+  display: grid;
+
+  place-items: center;
+
+  width: 34px;
+  height: 34px;
+
+  flex: 0 0 auto;
+
+  border-radius: 50%;
+
+  background:
+    rgba(139, 38, 53, 0.08);
+
+  color:
+    var(--primary);
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.form-section-header h2 {
+  margin: 0 0 4px;
+
+  font-size: 16px;
+}
+
+.form-section-header p {
+  margin: 0;
+
+  color: #888;
+
+  font-size: 12px;
+}
+
+.form-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+
+  gap: 20px;
+}
+
+.form-grid label {
+  display: grid;
+
+  gap: 8px;
+
+  color: #444;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.form-grid input,
+.form-grid select,
+.form-grid textarea {
+  width: 100%;
+
+  padding: 11px 12px;
+
+  border: 1px solid #d8d8d8;
+  border-radius: 8px;
+
+  outline: none;
+
+  background: #fff;
+
+  font: inherit;
+}
+
+.form-grid select,
+.form-grid input {
+  min-height: 44px;
+}
+
+.form-grid textarea {
+  resize: vertical;
+}
+
+.form-grid input:focus,
+.form-grid select:focus,
+.form-grid textarea:focus {
+  border-color:
+    var(--primary);
+
+  box-shadow:
+    0 0 0 3px
+    rgba(139, 38, 53, 0.08);
+}
+
+.form-grid select:disabled {
+  background: #f5f5f5;
+
+  cursor: not-allowed;
+}
+
+.full-column {
+  grid-column: 1 / -1;
+}
+
+.document-form-actions {
+  display: flex;
+
+  justify-content:
+    flex-end;
+
+  gap: 10px;
+
+  padding: 18px 26px;
+
+  background: #fafafa;
+}
+
+.document-form-loading {
+  padding: 50px;
+
+  color: #888;
+
+  text-align: center;
+}
+
+@media (max-width: 700px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .full-column {
+    grid-column: auto;
+  }
+
+  .form-section {
+    padding: 20px;
+  }
+
+  .document-form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .document-form-actions button {
+    width: 100%;
+  }
+}

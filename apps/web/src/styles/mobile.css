@@ -1,0 +1,500 @@
+/* =====================================================
+   RESPONSIVE GLOBAL
+===================================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+
+  max-width: 100%;
+
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+
+  height: auto;
+}
+
+button,
+input,
+select,
+textarea {
+  max-width: 100%;
+}
+
+/* =====================================================
+   TABLETS / CELULAR
+===================================================== */
+
+@media (max-width: 900px) {
+
+  /* ===============================================
+     HEADERS
+  =============================================== */
+
+  .dashboard-main > header {
+    display: flex;
+
+    align-items:
+      flex-start;
+
+    justify-content:
+      space-between;
+
+    gap: 15px;
+
+    margin-bottom: 20px;
+  }
+
+  .dashboard-main > header h1 {
+    margin:
+      4px 0;
+
+    font-size: 25px;
+
+    line-height: 1.2;
+  }
+
+  .dashboard-main > header
+  .page-description {
+    max-width: 100%;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+  }
+
+  /* ===============================================
+     TABLAS
+  =============================================== */
+
+  .table-wrapper {
+    width: 100%;
+
+    overflow-x: auto;
+
+    -webkit-overflow-scrolling:
+      touch;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  /* ===============================================
+     MODALES
+  =============================================== */
+
+  .modal-backdrop {
+    align-items:
+      flex-start !important;
+
+    overflow-y: auto;
+
+    padding:
+      20px 12px !important;
+  }
+
+  .user-modal,
+  .password-reset-modal,
+  .reminder-modal,
+  .calendar-reminder-modal {
+    width: 100% !important;
+
+    max-width: 600px;
+
+    margin: auto;
+
+    max-height:
+      calc(100dvh - 40px);
+
+    overflow-y: auto;
+  }
+
+  /* ===============================================
+     BOTONES
+  =============================================== */
+
+  .new-document {
+    min-height: 40px;
+
+    white-space: nowrap;
+  }
+
+  /* ===============================================
+     CARDS
+  =============================================== */
+
+  .dashboard-cards,
+  .calendar-stats,
+  .history-stats,
+  .user-stats {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      ) !important;
+  }
+
+  /* ===============================================
+     FILTROS
+  =============================================== */
+
+  .calendar-filters,
+  .history-filters {
+    align-items:
+      stretch !important;
+
+    flex-direction:
+      column !important;
+  }
+
+  .calendar-filters > div,
+  .history-filter-grid {
+    width: 100%;
+
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      ) !important;
+  }
+
+  .users-filters {
+    grid-template-columns:
+      1fr 1fr !important;
+  }
+
+  .users-filters input:first-child {
+    grid-column:
+      1 / -1;
+  }
+
+  /* ===============================================
+     FORMULARIOS
+  =============================================== */
+
+  .form-grid,
+  .reminder-form,
+  .calendar-reminder-form,
+  .user-form {
+    grid-template-columns:
+      1fr !important;
+  }
+
+  .full-column,
+  .full-field,
+  .calendar-reminder-form
+  .full-field,
+  .user-form
+  .full-field {
+    grid-column:
+      auto !important;
+  }
+
+  /* ===============================================
+     CALENDARIO
+  =============================================== */
+
+  .calendar-layout {
+    grid-template-columns:
+      1fr !important;
+  }
+
+  .calendar-sidebar {
+    position:
+      static !important;
+  }
+
+  .calendar-card {
+    width: 100%;
+
+    overflow-x: auto;
+  }
+
+  .calendar-header,
+  .calendar-grid,
+  .week-header {
+    min-width:
+      820px;
+  }
+}
+
+/* =====================================================
+   CELULARES
+===================================================== */
+
+@media (max-width: 600px) {
+
+  /* ===============================================
+     HEADER DE PÁGINAS
+  =============================================== */
+
+  .dashboard-main > header {
+    flex-direction:
+      column;
+
+    align-items:
+      stretch;
+  }
+
+  .dashboard-main > header h1 {
+    font-size:
+      23px;
+  }
+
+  .dashboard-main > header
+  > button {
+    width: 100%;
+  }
+
+  .calendar-page-actions {
+    width: 100%;
+
+    display: grid !important;
+
+    grid-template-columns:
+      1fr 1fr;
+
+    gap: 8px;
+  }
+
+  .calendar-page-actions button {
+    width: 100%;
+  }
+
+  /* ===============================================
+     STATS
+  =============================================== */
+
+  .dashboard-cards,
+  .calendar-stats,
+  .history-stats,
+  .user-stats {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      ) !important;
+
+    gap: 9px !important;
+  }
+
+  .calendar-stats article,
+  .history-stats article,
+  .user-stats article {
+    padding:
+      14px !important;
+  }
+
+  .calendar-stats strong,
+  .history-stats strong,
+  .user-stats strong {
+    font-size:
+      22px !important;
+  }
+
+  /* ===============================================
+     FILTROS
+  =============================================== */
+
+  .calendar-filters > div,
+  .history-filter-grid,
+  .users-filters {
+    grid-template-columns:
+      1fr !important;
+  }
+
+  .calendar-filters,
+  .history-filters,
+  .users-filters {
+    padding:
+      11px !important;
+
+    gap:
+      10px !important;
+  }
+
+  .calendar-filters select,
+  .history-filter-grid select,
+  .history-filter-grid input,
+  .users-filters select,
+  .users-filters input {
+    min-height:
+      44px !important;
+
+    font-size:
+      16px !important;
+  }
+
+  /* ===============================================
+     INPUTS
+     16PX EVITA ZOOM AUTOMÁTICO EN IPHONE
+  =============================================== */
+
+  input,
+  select,
+  textarea {
+    font-size:
+      16px !important;
+  }
+
+  /* ===============================================
+     MODALES
+  =============================================== */
+
+  .modal-backdrop {
+    padding:
+      0 !important;
+  }
+
+  .user-modal,
+  .password-reset-modal,
+  .reminder-modal,
+  .calendar-reminder-modal {
+    width: 100% !important;
+
+    max-width: none !important;
+
+    min-height: 100dvh;
+
+    max-height: none;
+
+    margin: 0;
+
+    border-radius: 0 !important;
+  }
+
+  .modal-header {
+    position: sticky;
+
+    top: 0;
+
+    z-index: 10;
+
+    background: #fff;
+  }
+
+  .modal-footer {
+    position: sticky;
+
+    bottom: 0;
+
+    z-index: 10;
+
+    background: #fff;
+  }
+
+  /* ===============================================
+     CALENDARIO
+  =============================================== */
+
+  .calendar-layout {
+    gap:
+      12px !important;
+  }
+
+  .calendar-header,
+  .calendar-grid,
+  .week-header {
+    min-width:
+      760px !important;
+  }
+
+  .calendar-day {
+    min-height:
+      100px !important;
+  }
+
+  .calendar-sidebar {
+    width:
+      100%;
+  }
+
+  /* ===============================================
+     TABLAS
+  =============================================== */
+
+  .users-table,
+  .history-table,
+  .reminders-table {
+    min-width:
+      850px !important;
+  }
+
+  /* ===============================================
+     FORMULARIOS
+  =============================================== */
+
+  .form-section {
+    padding:
+      17px !important;
+  }
+
+  .document-form-actions {
+    flex-direction:
+      column-reverse !important;
+
+    padding:
+      14px !important;
+  }
+
+  .document-form-actions button {
+    width: 100%;
+  }
+
+  /* ===============================================
+     ACCIONES TABLAS
+  =============================================== */
+
+  .row-actions,
+  .user-actions {
+    min-width:
+      130px;
+  }
+
+  /* ===============================================
+     PANELES
+  =============================================== */
+
+  .users-panel,
+  .history-panel,
+  .reminders-panel,
+  .calendar-card,
+  .calendar-sidebar {
+    border-radius:
+      9px !important;
+  }
+}
+
+/* =====================================================
+   CELULAR PEQUEÑO
+===================================================== */
+
+@media (max-width: 400px) {
+
+  .dashboard-main {
+    padding:
+      14px 10px 24px !important;
+  }
+
+  .dashboard-cards,
+  .calendar-stats,
+  .history-stats,
+  .user-stats {
+    grid-template-columns:
+      1fr !important;
+  }
+
+  .calendar-page-actions {
+    grid-template-columns:
+      1fr;
+  }
+}

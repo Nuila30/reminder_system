@@ -1,0 +1,628 @@
+/* =====================================================
+   ESTADÍSTICAS
+===================================================== */
+
+.user-stats {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      4,
+      minmax(0, 1fr)
+    );
+
+  gap: 14px;
+
+  margin-bottom: 18px;
+}
+
+.user-stats article {
+  padding:
+    17px 18px;
+
+  border:
+    1px solid var(--border);
+
+  border-radius:
+    11px;
+
+  background:
+    #fff;
+}
+
+.user-stats span {
+  display: block;
+
+  margin-bottom:
+    10px;
+
+  color:
+    #888;
+
+  font-size:
+    11px;
+}
+
+.user-stats strong {
+  color:
+    #181818;
+
+  font-size:
+    26px;
+}
+
+/* =====================================================
+   FILTROS
+===================================================== */
+
+.users-filters {
+  display: grid;
+
+  grid-template-columns:
+    minmax(
+      280px,
+      1fr
+    )
+    220px
+    220px;
+
+  gap: 12px;
+
+  margin-bottom:
+    18px;
+
+  padding:
+    14px;
+
+  border:
+    1px solid var(--border);
+
+  border-radius:
+    11px;
+
+  background:
+    #fff;
+}
+
+.users-filters input,
+.users-filters select {
+  width: 100%;
+
+  min-height:
+    40px;
+
+  padding:
+    0 11px;
+
+  border:
+    1px solid #ddd;
+
+  border-radius:
+    7px;
+
+  outline:
+    none;
+
+  background:
+    #fff;
+
+  color:
+    #444;
+}
+
+.users-filters input:focus,
+.users-filters select:focus {
+  border-color:
+    var(--primary);
+
+  box-shadow:
+    0 0 0 3px
+    rgba(
+      139,
+      38,
+      53,
+      0.07
+    );
+}
+
+/* =====================================================
+   TABLA
+===================================================== */
+
+.users-panel {
+  overflow:
+    hidden;
+
+  border:
+    1px solid var(--border);
+
+  border-radius:
+    12px;
+
+  background:
+    #fff;
+}
+
+.users-count {
+  padding:
+    14px 18px;
+
+  border-bottom:
+    1px solid #eee;
+
+  color:
+    #888;
+
+  font-size:
+    11px;
+}
+
+.users-table {
+  width:
+    100%;
+
+  min-width:
+    1000px;
+
+  border-collapse:
+    collapse;
+}
+
+.users-table th {
+  padding:
+    12px 14px;
+
+  border-bottom:
+    1px solid #e8e8e8;
+
+  background:
+    #fafafa;
+
+  color:
+    #777;
+
+  font-size:
+    9px;
+
+  font-weight:
+    800;
+
+  text-align:
+    left;
+
+  text-transform:
+    uppercase;
+}
+
+.users-table td {
+  padding:
+    14px;
+
+  border-bottom:
+    1px solid #eee;
+
+  color:
+    #555;
+
+  font-size:
+    11px;
+
+  vertical-align:
+    middle;
+}
+
+.users-table td strong {
+  display:
+    block;
+
+  color:
+    #222;
+
+  font-size:
+    12px;
+}
+
+.users-table td small {
+  display:
+    block;
+
+  margin-top:
+    4px;
+
+  color:
+    #999;
+
+  font-size:
+    10px;
+}
+
+/* =====================================================
+   ROLES
+===================================================== */
+
+.user-role {
+  display:
+    inline-flex;
+
+  padding:
+    5px 8px;
+
+  border-radius:
+    999px;
+
+  font-size:
+    9px;
+
+  font-weight:
+    800;
+}
+
+.role-admin {
+  background:
+    #fff1f2;
+
+  color:
+    #9f1d35;
+}
+
+.role-supervisor {
+  background:
+    #fff7ed;
+
+  color:
+    #c2410c;
+}
+
+.role-employee {
+  background:
+    #eff6ff;
+
+  color:
+    #1d4ed8;
+}
+
+.role-read_only {
+  background:
+    #f5f5f5;
+
+  color:
+    #666;
+}
+
+/* =====================================================
+   ESTADOS
+===================================================== */
+
+.user-status {
+  display:
+    inline-flex;
+
+  padding:
+    5px 8px;
+
+  border-radius:
+    999px;
+
+  font-size:
+    9px;
+
+  font-weight:
+    800;
+}
+
+.user-active {
+  background:
+    #ecfdf5;
+
+  color:
+    #047857;
+}
+
+.user-inactive {
+  background:
+    #f5f5f5;
+
+  color:
+    #777;
+}
+
+/* =====================================================
+   ACCIONES
+===================================================== */
+
+.user-actions {
+  display:
+    flex;
+
+  flex-wrap:
+    wrap;
+
+  gap:
+    5px;
+}
+
+.user-actions button {
+  min-height:
+    30px;
+
+  padding:
+    0 9px;
+
+  border:
+    1px solid #ddd;
+
+  border-radius:
+    6px;
+
+  background:
+    #fff;
+
+  color:
+    #555;
+
+  font-size:
+    9px;
+
+  font-weight:
+    700;
+}
+
+.user-actions button:hover {
+  border-color:
+    var(--primary);
+
+  color:
+    var(--primary);
+}
+
+.danger-user-action {
+  color:
+    #be123c !important;
+}
+
+.activate-user-action {
+  color:
+    #047857 !important;
+}
+
+.user-actions button:disabled {
+  opacity:
+    0.4;
+
+  cursor:
+    not-allowed;
+}
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+.user-modal,
+.password-reset-modal {
+  width:
+    min(
+      100%,
+      580px
+    );
+
+  overflow:
+    hidden;
+
+  border-radius:
+    13px;
+
+  background:
+    #fff;
+
+  box-shadow:
+    0 20px 60px
+    rgba(
+      0,
+      0,
+      0,
+      0.22
+    );
+}
+
+.user-form {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+
+  gap:
+    18px;
+
+  padding:
+    22px;
+}
+
+.user-form label,
+.password-reset-form label {
+  display:
+    grid;
+
+  gap:
+    8px;
+
+  color:
+    #444;
+
+  font-size:
+    11px;
+
+  font-weight:
+    700;
+}
+
+.user-form
+.full-field {
+  grid-column:
+    1 / -1;
+}
+
+.user-form input,
+.user-form select,
+.password-reset-form input {
+  width:
+    100%;
+
+  min-height:
+    43px;
+
+  padding:
+    0 11px;
+
+  border:
+    1px solid #d8d8d8;
+
+  border-radius:
+    8px;
+
+  outline:
+    none;
+
+  background:
+    #fff;
+}
+
+.user-form input:focus,
+.user-form select:focus,
+.password-reset-form input:focus {
+  border-color:
+    var(--primary);
+
+  box-shadow:
+    0 0 0 3px
+    rgba(
+      139,
+      38,
+      53,
+      0.07
+    );
+}
+
+.user-password-field {
+  display:
+    grid;
+
+  grid-template-columns:
+    1fr auto;
+
+  gap:
+    7px;
+}
+
+.user-password-field button {
+  padding:
+    0 10px;
+
+  border:
+    1px solid #ddd;
+
+  border-radius:
+    7px;
+
+  background:
+    #fff;
+
+  color:
+    #555;
+
+  font-size:
+    10px;
+}
+
+.user-checkbox-field {
+  display:
+    flex !important;
+
+  align-items:
+    center;
+
+  align-self:
+    end;
+
+  flex-direction:
+    row;
+
+  gap:
+    9px !important;
+
+  min-height:
+    43px;
+}
+
+.user-checkbox-field input {
+  width:
+    16px;
+
+  min-height:
+    auto;
+
+  height:
+    16px;
+}
+
+.password-reset-form {
+  padding:
+    22px;
+}
+
+.password-reset-form small {
+  color:
+    #999;
+
+  font-size:
+    9px;
+
+  font-weight:
+    400;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (
+  max-width:
+    900px
+) {
+  .user-stats {
+    grid-template-columns:
+      repeat(
+        2,
+        1fr
+      );
+  }
+
+  .users-filters {
+    grid-template-columns:
+      1fr;
+  }
+}
+
+@media (
+  max-width:
+    600px
+) {
+  .user-stats {
+    grid-template-columns:
+      1fr;
+  }
+
+  .user-form {
+    grid-template-columns:
+      1fr;
+  }
+
+  .user-form
+  .full-field {
+    grid-column:
+      auto;
+  }
+}

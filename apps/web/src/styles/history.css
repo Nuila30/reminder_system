@@ -1,0 +1,704 @@
+/* =====================================================
+   HEADER
+===================================================== */
+
+.history-export-button {
+  min-height:
+    42px;
+
+  padding:
+    0 16px;
+
+  border:
+    1px solid
+    var(--primary);
+
+  border-radius:
+    8px;
+
+  background:
+    var(--primary);
+
+  color:
+    #fff;
+
+  font-size:
+    11px;
+
+  font-weight:
+    800;
+}
+
+.history-export-button:disabled {
+  opacity:
+    0.45;
+
+  cursor:
+    not-allowed;
+}
+
+/* =====================================================
+   ESTADÍSTICAS
+===================================================== */
+
+.history-stats {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      4,
+      minmax(
+        0,
+        1fr
+      )
+    );
+
+  gap:
+    14px;
+
+  margin-bottom:
+    18px;
+}
+
+.history-stats article {
+  padding:
+    17px
+    18px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:
+    11px;
+
+  background:
+    #fff;
+}
+
+.history-stats span {
+  display:
+    block;
+
+  margin-bottom:
+    10px;
+
+  color:
+    #888;
+
+  font-size:
+    11px;
+}
+
+.history-stats strong {
+  color:
+    #181818;
+
+  font-size:
+    26px;
+}
+
+/* =====================================================
+   FILTROS
+===================================================== */
+
+.history-filters {
+  display:
+    flex;
+
+  align-items:
+    flex-end;
+
+  justify-content:
+    space-between;
+
+  gap:
+    15px;
+
+  margin-bottom:
+    18px;
+
+  padding:
+    15px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:
+    11px;
+
+  background:
+    #fff;
+}
+
+.history-filter-grid {
+  flex:
+    1;
+
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      6,
+      minmax(
+        130px,
+        1fr
+      )
+    );
+
+  gap:
+    11px;
+}
+
+.history-filter-grid label {
+  display:
+    grid;
+
+  gap:
+    6px;
+
+  color:
+    #777;
+
+  font-size:
+    9px;
+
+  font-weight:
+    800;
+
+  text-transform:
+    uppercase;
+}
+
+.history-filter-grid select,
+.history-filter-grid input {
+  width:
+    100%;
+
+  min-height:
+    39px;
+
+  padding:
+    0 9px;
+
+  border:
+    1px solid #ddd;
+
+  border-radius:
+    7px;
+
+  outline:
+    none;
+
+  background:
+    #fff;
+
+  color:
+    #444;
+
+  font-size:
+    11px;
+
+  text-transform:
+    none;
+}
+
+.history-filter-grid select:focus,
+.history-filter-grid input:focus {
+  border-color:
+    var(--primary);
+
+  box-shadow:
+    0
+    0
+    0
+    3px
+    rgba(
+      139,
+      38,
+      53,
+      0.07
+    );
+}
+
+.history-clear-button {
+  min-height:
+    39px;
+
+  padding:
+    0 13px;
+
+  border:
+    1px solid #ddd;
+
+  border-radius:
+    7px;
+
+  background:
+    #fff;
+
+  color:
+    #666;
+
+  font-size:
+    10px;
+
+  font-weight:
+    700;
+
+  white-space:
+    nowrap;
+}
+
+/* =====================================================
+   PANEL
+===================================================== */
+
+.history-panel {
+  overflow:
+    hidden;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:
+    12px;
+
+  background:
+    #fff;
+}
+
+.history-summary {
+  padding:
+    13px
+    17px;
+
+  border-bottom:
+    1px solid #eee;
+
+  color:
+    #888;
+
+  font-size:
+    11px;
+}
+
+.history-table {
+  width:
+    100%;
+
+  min-width:
+    1150px;
+
+  border-collapse:
+    collapse;
+}
+
+.history-table th {
+  padding:
+    12px 13px;
+
+  border-bottom:
+    1px solid #e8e8e8;
+
+  background:
+    #fafafa;
+
+  color:
+    #777;
+
+  font-size:
+    9px;
+
+  font-weight:
+    800;
+
+  text-align:
+    left;
+
+  text-transform:
+    uppercase;
+}
+
+.history-table td {
+  padding:
+    13px;
+
+  border-bottom:
+    1px solid #eee;
+
+  color:
+    #555;
+
+  font-size:
+    11px;
+
+  vertical-align:
+    middle;
+}
+
+.history-table td strong {
+  display:
+    block;
+
+  color:
+    #333;
+
+  font-size:
+    11px;
+}
+
+.history-table td small {
+  display:
+    block;
+
+  margin-top:
+    4px;
+
+  color:
+    #999;
+
+  font-size:
+    9px;
+}
+
+/* =====================================================
+   FECHA
+===================================================== */
+
+.history-date strong {
+  white-space:
+    nowrap;
+}
+
+.history-date span {
+  display:
+    block;
+
+  margin-top:
+    4px;
+
+  color:
+    #999;
+
+  font-size:
+    9px;
+}
+
+/* =====================================================
+   ORIGEN
+===================================================== */
+
+.history-source {
+  display:
+    inline-flex;
+
+  margin-bottom:
+    5px;
+
+  padding:
+    4px 6px;
+
+  border-radius:
+    999px;
+
+  font-size:
+    8px;
+
+  font-weight:
+    800;
+
+  text-transform:
+    uppercase;
+}
+
+.source-document {
+  background:
+    #f5f5f5;
+
+  color:
+    #555;
+}
+
+.source-reminder {
+  background:
+    #eff6ff;
+
+  color:
+    #1d4ed8;
+}
+
+.source-status {
+  background:
+    #fff7ed;
+
+  color:
+    #c2410c;
+}
+
+.source-notification {
+  background:
+    #ecfdf5;
+
+  color:
+    #047857;
+}
+
+.history-action-title {
+  font-size:
+    10px !important;
+}
+
+/* =====================================================
+   DOCUMENTO
+===================================================== */
+
+.history-document-link {
+  padding:
+    0;
+
+  border:
+    0;
+
+  background:
+    transparent;
+
+  color:
+    var(--primary);
+
+  font-size:
+    11px;
+
+  font-weight:
+    700;
+
+  text-align:
+    left;
+
+  cursor:
+    pointer;
+}
+
+.history-document-link:hover {
+  text-decoration:
+    underline;
+}
+
+/* =====================================================
+   PRIORIDADES
+===================================================== */
+
+.history-priority {
+  display:
+    inline-flex;
+
+  padding:
+    5px 8px;
+
+  border-radius:
+    999px;
+
+  font-size:
+    9px;
+
+  font-weight:
+    800;
+}
+
+.priority-low {
+  background:
+    #f5f5f5;
+
+  color:
+    #666;
+}
+
+.priority-medium {
+  background:
+    #eff6ff;
+
+  color:
+    #1d4ed8;
+}
+
+.priority-high {
+  background:
+    #fff7ed;
+
+  color:
+    #c2410c;
+}
+
+.priority-critical {
+  background:
+    #fff1f2;
+
+  color:
+    #be123c;
+}
+
+/* =====================================================
+   ESTADOS
+===================================================== */
+
+.history-status {
+  display:
+    inline-flex;
+
+  padding:
+    5px 8px;
+
+  border-radius:
+    999px;
+
+  font-size:
+    9px;
+
+  font-weight:
+    800;
+}
+
+.status-pending,
+.status-scheduled {
+  background:
+    #eff6ff;
+
+  color:
+    #1d4ed8;
+}
+
+.status-in_progress,
+.status-processing {
+  background:
+    #fff7ed;
+
+  color:
+    #c2410c;
+}
+
+.status-completed,
+.status-success,
+.status-sent {
+  background:
+    #ecfdf5;
+
+  color:
+    #047857;
+}
+
+.status-expired,
+.status-failed {
+  background:
+    #fff1f2;
+
+  color:
+    #be123c;
+}
+
+.status-cancelled {
+  background:
+    #f5f5f5;
+
+  color:
+    #737373;
+}
+
+/* =====================================================
+   BOTÓN
+===================================================== */
+
+.history-view-button {
+  min-height:
+    30px;
+
+  padding:
+    0 10px;
+
+  border:
+    1px solid #ddd;
+
+  border-radius:
+    6px;
+
+  background:
+    #fff;
+
+  color:
+    var(--primary);
+
+  font-size:
+    9px;
+
+  font-weight:
+    800;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (
+  max-width:
+    1200px
+) {
+  .history-filter-grid {
+    grid-template-columns:
+      repeat(
+        3,
+        1fr
+      );
+  }
+}
+
+@media (
+  max-width:
+    800px
+) {
+  .history-stats {
+    grid-template-columns:
+      repeat(
+        2,
+        1fr
+      );
+  }
+
+  .history-filters {
+    align-items:
+      stretch;
+
+    flex-direction:
+      column;
+  }
+
+  .history-filter-grid {
+    grid-template-columns:
+      repeat(
+        2,
+        1fr
+      );
+  }
+
+  .history-clear-button {
+    width:
+      100%;
+  }
+}
+
+@media (
+  max-width:
+    520px
+) {
+  .history-stats {
+    grid-template-columns:
+      1fr;
+  }
+
+  .history-filter-grid {
+    grid-template-columns:
+      1fr;
+  }
+}
