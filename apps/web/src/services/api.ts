@@ -1,64 +1,98 @@
 const API_URL =
-  import.meta.env.VITE_API_URL ||
-  (
-    import.meta.env.DEV
-      ? "http://localhost:4000"
-      : ""
-  );
+  import.meta.env.DEV
+    ? "http://localhost:4000"
+    : "https://sysreminder.netlify.app/login";
 
 interface RequestOptions
   extends RequestInit {
-  body?:
-    BodyInit | null;
+  body?: BodyInit | null;
 }
 
 export async function apiRequest<T>(
   endpoint: string,
-  options:
-    RequestOptions = {}
+  options: RequestOptions = {}
 ): Promise<T> {
 
-  const response =
-    await fetch(
-      `${API_URL}${endpoint}`,
+  const url =
+    `${API_URL}${endpoint}`;
+
+  try {
+
+    const response =
+      await fetch(
+        url,
+        {
+          ...options,
+
+          credentials:
+            "include",
+
+          headers: {
+            "Content-Type":
+              "application/json",
+
+            ...options.headers
+          }
+        }
+      );
+
+    const contentType =
+      response.headers.get(
+        "content-type"
+      );
+
+    let data: any;
+
+    if (
+      contentType?.includes(
+        "application/json"
+      )
+    ) {
+      data =
+        await response.json();
+    } else {
+      const text =
+        await response.text();
+
+      data = {
+        message:
+          text ||
+          "Respuesta inválida del servidor"
+      };
+    }
+
+    if (
+      !response.ok
+    ) {
+      throw new Error(
+        data.message ||
+        `Error ${response.status}`
+      );
+    }
+
+    return data as T;
+
+  } catch (error) {
+
+    console.error(
+      "[API ERROR]",
       {
-        ...options,
-
-        headers: {
-          "Content-Type":
-            "application/json",
-
-          ...options.headers
-        },
-
-        credentials:
-          "include"
+        url,
+        error
       }
     );
 
-  const contentType =
-    response.headers.get(
-      "content-type"
-    );
+    if (
+      error instanceof TypeError &&
+      error.message.includes(
+        "fetch"
+      )
+    ) {
+      throw new Error(
+        "No fue posible conectar con el servidor."
+      );
+    }
 
-  const data =
-    contentType?.includes(
-      "application/json"
-    )
-      ? await response.json()
-      : {
-          message:
-            await response.text()
-        };
-
-  if (
-    !response.ok
-  ) {
-    throw new Error(
-      data.message ||
-      "Ocurrió un error al procesar la solicitud"
-    );
+    throw error;
   }
-
-  return data as T;
 }
