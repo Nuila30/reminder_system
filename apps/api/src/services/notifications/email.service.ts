@@ -8,19 +8,34 @@ import {
    TIPOS
 ===================================================== */
 
-export interface SendEmailInput {
+export interface EmailNotificationInput {
   to: string;
   subject: string;
   text: string;
 }
 
+/*
+ * IMPORTANTE:
+ *
+ * providerResponse y error son opcionales.
+ *
+ * Esto mantiene compatibilidad con:
+ * - email.service.ts
+ * - whatsapp.service.ts
+ * - reminder-engine.service.ts
+ */
+export interface NotificationResult {
+  ok: boolean;
+  providerResponse?: string;
+  error?: string;
+}
+
 /* =====================================================
-   TRANSPORT SMTP
+   TRANSPORTER SMTP
 ===================================================== */
 
 const transporter =
-  env.EMAIL_PROVIDER ===
-  "smtp"
+  env.EMAIL_PROVIDER === "smtp"
     ? nodemailer.createTransport({
         host:
           env.SMTP_HOST,
@@ -29,8 +44,7 @@ const transporter =
           env.SMTP_PORT,
 
         secure:
-          env.SMTP_SECURE ===
-          "true",
+          env.SMTP_SECURE === "true",
 
         auth: {
           user:
@@ -46,22 +60,21 @@ const transporter =
    ENVIAR EMAIL
 ===================================================== */
 
-export async function sendEmail(
-  input: SendEmailInput
-) {
+export async function sendEmailNotification(
+  input: EmailNotificationInput
+): Promise<NotificationResult> {
 
   /* =================================================
      MODO CONSOLA
   ================================================= */
 
   if (
-    env.EMAIL_PROVIDER ===
-    "console"
+    env.EMAIL_PROVIDER === "console"
   ) {
 
     console.log("");
     console.log(
-      "======================================"
+      "========================================"
     );
 
     console.log(
@@ -69,7 +82,7 @@ export async function sendEmail(
     );
 
     console.log(
-      "======================================"
+      "========================================"
     );
 
     console.log(
@@ -89,20 +102,27 @@ export async function sendEmail(
     );
 
     console.log(
-      "======================================"
+      "========================================"
     );
 
     console.log("");
 
     return {
-      success:
+      ok:
         true,
 
-      provider:
-        "console",
+      providerResponse:
+        JSON.stringify({
+          provider:
+            "console",
 
-      messageId:
-        `console-${Date.now()}`
+          to:
+            input.to,
+
+          sentAt:
+            new Date()
+              .toISOString()
+        })
     };
   }
 
@@ -111,94 +131,189 @@ export async function sendEmail(
   ================================================= */
 
   if (
-    !transporter
+    env.EMAIL_PROVIDER === "smtp"
   ) {
-    throw new Error(
-      "El servicio SMTP no está configurado"
-    );
+
+    if (
+      !transporter
+    ) {
+      return {
+        ok:
+          false,
+
+        error:
+          "SMTP no está configurado"
+      };
+    }
+
+    try {
+
+      const info =
+        await transporter.sendMail({
+          from:
+            env.EMAIL_FROM,
+
+          to:
+            input.to,
+
+          subject:
+            input.subject,
+
+          text:
+            input.text
+        });
+
+      console.log(
+        `[EMAIL] ✅ Enviado correctamente a ${input.to}`
+      );
+
+      console.log(
+        `[EMAIL] Message ID: ${info.messageId}`
+      );
+
+      return {
+        ok:
+          true,
+
+        providerResponse:
+          JSON.stringify({
+            provider:
+              "smtp",
+
+            messageId:
+              info.messageId,
+
+            accepted:
+              info.accepted,
+
+            rejected:
+              info.rejected,
+
+            response:
+              info.response
+          })
+      };
+
+    } catch (error) {
+
+      const message =
+        error instanceof Error
+          ? error.message
+          : String(error);
+
+      console.error(
+        "[EMAIL] ❌ Error SMTP:",
+        message
+      );
+
+      return {
+        ok:
+          false,
+
+        error:
+          message
+      };
+    }
   }
 
-  try {
+  /* =================================================
+     PROVIDER NO SOPORTADO
+  ================================================= */
 
-    const info =
-      await transporter.sendMail({
-        from:
-          env.EMAIL_FROM,
+  return {
+    ok:
+      false,
 
-        to:
-          input.to,
-
-        subject:
-          input.subject,
-
-        text:
-          input.text
-      });
-
-    console.log(
-      `[EMAIL] Enviado correctamente a ${input.to}`
-    );
-
-    console.log(
-      `[EMAIL] Message ID: ${info.messageId}`
-    );
-
-    return {
-      success:
-        true,
-
-      provider:
-        "smtp",
-
-      messageId:
-        info.messageId
-    };
-
-  } catch (error) {
-
-    console.error(
-      "[EMAIL] Error SMTP:",
-      error
-    );
-
-    throw error;
-  }
+    error:
+      `EMAIL_PROVIDER no soportado: ${env.EMAIL_PROVIDER}`
+  };
 }
 
 /* =====================================================
-   VERIFICAR CONEXIÓN
+   ALIAS
+===================================================== */
+
+export async function sendEmail(
+  input: EmailNotificationInput
+): Promise<NotificationResult> {
+
+  return sendEmailNotification(
+    input
+  );
+}
+
+/* =====================================================
+   VERIFICAR CONEXIÓN SMTP
 ===================================================== */
 
 export async function verifyEmailConnection() {
+
+  /* =================================================
+     CONSOLE
+  ================================================= */
 
   if (
     env.EMAIL_PROVIDER ===
     "console"
   ) {
+
     return {
-      success:
+      ok:
         true,
 
       provider:
-        "console"
+        "console",
+
+      message:
+        "Email configurado en modo consola"
     };
   }
+
+  /* =================================================
+     VALIDAR PROVIDER
+  ================================================= */
+
+  if (
+    env.EMAIL_PROVIDER !==
+    "smtp"
+  ) {
+
+    throw new Error(
+      `Proveedor no soportado: ${env.EMAIL_PROVIDER}`
+    );
+  }
+
+  /* =================================================
+     VALIDAR TRANSPORTER
+  ================================================= */
 
   if (
     !transporter
   ) {
+
     throw new Error(
-      "SMTP no configurado"
+      "SMTP no está configurado"
     );
   }
 
+  /* =================================================
+     VERIFICAR
+  ================================================= */
+
   await transporter.verify();
 
+  console.log(
+    "[EMAIL] ✅ Conexión SMTP correcta"
+  );
+
   return {
-    success:
+    ok:
       true,
 
     provider:
-      "smtp"
+      "smtp",
+
+    message:
+      "Conexión SMTP correcta"
   };
 }
