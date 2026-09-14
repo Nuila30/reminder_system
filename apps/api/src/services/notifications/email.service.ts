@@ -1,38 +1,67 @@
+import nodemailer from "nodemailer";
+
 import {
   env
 } from "../../config/env.js";
 
-export interface EmailPayload {
+/* =====================================================
+   TIPOS
+===================================================== */
+
+export interface SendEmailInput {
   to: string;
-
   subject: string;
-
   text: string;
 }
 
-export interface NotificationResult {
-  ok: boolean;
+/* =====================================================
+   TRANSPORT SMTP
+===================================================== */
 
-  providerResponse?:
-    string;
+const transporter =
+  env.EMAIL_PROVIDER ===
+  "smtp"
+    ? nodemailer.createTransport({
+        host:
+          env.SMTP_HOST,
 
-  error?:
-    string;
-}
+        port:
+          env.SMTP_PORT,
 
-export async function sendEmailNotification(
-  payload:
-    EmailPayload
-): Promise<
-  NotificationResult
-> {
+        secure:
+          env.SMTP_SECURE ===
+          "true",
+
+        auth: {
+          user:
+            env.SMTP_USER,
+
+          pass:
+            env.SMTP_PASS
+        }
+      })
+    : null;
+
+/* =====================================================
+   ENVIAR EMAIL
+===================================================== */
+
+export async function sendEmail(
+  input: SendEmailInput
+) {
+
+  /* =================================================
+     MODO CONSOLA
+  ================================================= */
+
   if (
     env.EMAIL_PROVIDER ===
     "console"
   ) {
+
     console.log("");
     console.log(
-      "=========================================="
+      "======================================"
     );
 
     console.log(
@@ -40,113 +69,136 @@ export async function sendEmailNotification(
     );
 
     console.log(
-      "=========================================="
+      "======================================"
     );
 
     console.log(
       "Para:",
-      payload.to
+      input.to
     );
 
     console.log(
       "Asunto:",
-      payload.subject
+      input.subject
     );
 
     console.log("");
 
     console.log(
-      payload.text
+      input.text
     );
 
     console.log(
-      "=========================================="
+      "======================================"
     );
 
     console.log("");
 
     return {
-      ok: true,
+      success:
+        true,
 
-      providerResponse:
-        "CONSOLE_EMAIL_SUCCESS"
+      provider:
+        "console",
+
+      messageId:
+        `console-${Date.now()}`
+    };
+  }
+
+  /* =================================================
+     SMTP
+  ================================================= */
+
+  if (
+    !transporter
+  ) {
+    throw new Error(
+      "El servicio SMTP no está configurado"
+    );
+  }
+
+  try {
+
+    const info =
+      await transporter.sendMail({
+        from:
+          env.EMAIL_FROM,
+
+        to:
+          input.to,
+
+        subject:
+          input.subject,
+
+        text:
+          input.text
+      });
+
+    console.log(
+      `[EMAIL] Enviado correctamente a ${input.to}`
+    );
+
+    console.log(
+      `[EMAIL] Message ID: ${info.messageId}`
+    );
+
+    return {
+      success:
+        true,
+
+      provider:
+        "smtp",
+
+      messageId:
+        info.messageId
+    };
+
+  } catch (error) {
+
+    console.error(
+      "[EMAIL] Error SMTP:",
+      error
+    );
+
+    throw error;
+  }
+}
+
+/* =====================================================
+   VERIFICAR CONEXIÓN
+===================================================== */
+
+export async function verifyEmailConnection() {
+
+  if (
+    env.EMAIL_PROVIDER ===
+    "console"
+  ) {
+    return {
+      success:
+        true,
+
+      provider:
+        "console"
     };
   }
 
   if (
-    !env.RESEND_API_KEY
+    !transporter
   ) {
-    return {
-      ok: false,
-
-      error:
-        "RESEND_API_KEY no está configurada"
-    };
+    throw new Error(
+      "SMTP no configurado"
+    );
   }
 
-  try {
-    const response =
-      await fetch(
-        "https://api.resend.com/emails",
-        {
-          method:
-            "POST",
+  await transporter.verify();
 
-          headers: {
-            Authorization:
-              `Bearer ${env.RESEND_API_KEY}`,
+  return {
+    success:
+      true,
 
-            "Content-Type":
-              "application/json"
-          },
-
-          body:
-            JSON.stringify({
-              from:
-                env.EMAIL_FROM,
-
-              to: [
-                payload.to
-              ],
-
-              subject:
-                payload.subject,
-
-              text:
-                payload.text
-            })
-        }
-      );
-
-    const responseText =
-      await response.text();
-
-    if (
-      !response.ok
-    ) {
-      return {
-        ok: false,
-
-        error:
-          responseText
-      };
-    }
-
-    return {
-      ok: true,
-
-      providerResponse:
-        responseText
-    };
-
-  } catch (error) {
-    return {
-      ok: false,
-
-      error:
-        error instanceof Error
-          ? error.message
-          : "Error desconocido enviando correo"
-    };
-  }
+    provider:
+      "smtp"
+  };
 }

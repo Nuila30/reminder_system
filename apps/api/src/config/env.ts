@@ -1,115 +1,228 @@
 import "dotenv/config";
 
-import { z } from "zod";
+import {
+  z
+} from "zod";
 
-const envSchema = z.object({
-  NODE_ENV: z
-    .enum([
-      "development",
-      "production",
-      "test"
-    ])
-    .default("development"),
+/* =====================================================
+   URL DEL DEPLOY
+===================================================== */
 
-  PORT: z.coerce
-    .number()
-    .int()
-    .positive()
-    .default(4000),
+const deploymentUrl =
+  process.env.URL ||
+  "http://localhost:5173";
 
-  DATABASE_URL: z
-    .string()
-    .min(
-      1,
-      "DATABASE_URL es obligatoria"
-    ),
+/* =====================================================
+   SCHEMA
+===================================================== */
 
-  FRONTEND_URL: z
-    .string()
-    .default(
-      "http://localhost:5173"
-    ),
+const envSchema =
+  z.object({
 
-  APP_URL: z
-    .string()
-    .default(
-      "http://localhost:5173"
-    ),
+    NODE_ENV:
+      z.enum([
+        "development",
+        "production",
+        "test"
+      ])
+        .default(
+          "development"
+        ),
 
-  JWT_SECRET: z
-    .string()
-    .min(
-      16,
-      "JWT_SECRET debe tener al menos 16 caracteres"
-    ),
+    PORT:
+      z.coerce
+        .number()
+        .int()
+        .positive()
+        .default(
+          4000
+        ),
 
-  JOB_SECRET: z
-    .string()
-    .min(
-      16,
-      "JOB_SECRET debe tener al menos 16 caracteres"
-    ),
+    /* =================================================
+       DATABASE
+    ================================================= */
 
-  ENABLE_LOCAL_WORKER: z
-    .string()
-    .default("true"),
+    DATABASE_URL:
+      z.string()
+        .min(
+          1,
+          "DATABASE_URL es obligatoria"
+        ),
 
-  EMAIL_PROVIDER: z
-    .enum([
-      "console",
-      "resend"
-    ])
-    .default("console"),
+    /* =================================================
+       APLICACIÓN
+    ================================================= */
 
-  EMAIL_FROM: z
-    .string()
-    .default(
-      "Reminder System <reminders@example.com>"
-    ),
+    FRONTEND_URL:
+      z.string()
+        .url(),
 
-  RESEND_API_KEY: z
-    .string()
-    .optional(),
+    APP_URL:
+      z.string()
+        .url(),
 
-  WHATSAPP_PROVIDER: z
-    .enum([
-      "console",
-      "meta"
-    ])
-    .default("console"),
+    /* =================================================
+       SEGURIDAD
+    ================================================= */
 
-  WHATSAPP_ACCESS_TOKEN: z
-    .string()
-    .optional(),
+    JWT_SECRET:
+      z.string()
+        .min(
+          32,
+          "JWT_SECRET debe tener al menos 32 caracteres"
+        ),
 
-  WHATSAPP_PHONE_NUMBER_ID: z
-    .string()
-    .optional(),
+    JOB_SECRET:
+      z.string()
+        .min(
+          32,
+          "JOB_SECRET debe tener al menos 32 caracteres"
+        ),
 
-  WHATSAPP_API_VERSION: z
-    .string()
-    .default("v23.0"),
+    /* =================================================
+       WORKER
+    ================================================= */
 
-  WHATSAPP_TEMPLATE_NAME: z
-    .string()
-    .default(
-      "document_reminder"
-    ),
+    ENABLE_LOCAL_WORKER:
+      z.enum([
+        "true",
+        "false"
+      ])
+        .default(
+          "true"
+        ),
 
-  WHATSAPP_TEMPLATE_LANGUAGE: z
-    .string()
-    .default("es")
-});
+    /* =================================================
+       EMAIL
+    ================================================= */
+
+    EMAIL_PROVIDER:
+      z.enum([
+        "console",
+        "smtp"
+      ])
+        .default(
+          "console"
+        ),
+
+    EMAIL_FROM:
+      z.string()
+        .min(
+          1,
+          "EMAIL_FROM es obligatorio"
+        ),
+
+    SMTP_HOST:
+      z.string()
+        .default(
+          "smtp.gmail.com"
+        ),
+
+    SMTP_PORT:
+      z.coerce
+        .number()
+        .int()
+        .positive()
+        .default(
+          465
+        ),
+
+    SMTP_SECURE:
+      z.enum([
+        "true",
+        "false"
+      ])
+        .default(
+          "true"
+        ),
+
+    SMTP_USER:
+      z.string()
+        .optional(),
+
+    SMTP_PASS:
+      z.string()
+        .optional(),
+
+    /* =================================================
+       WHATSAPP
+    ================================================= */
+
+    WHATSAPP_PROVIDER:
+      z.enum([
+        "console",
+        "meta"
+      ])
+        .default(
+          "console"
+        ),
+
+    WHATSAPP_ACCESS_TOKEN:
+      z.string()
+        .optional(),
+
+    WHATSAPP_PHONE_NUMBER_ID:
+      z.string()
+        .optional(),
+
+    WHATSAPP_API_VERSION:
+      z.string()
+        .default(
+          "v23.0"
+        ),
+
+    WHATSAPP_TEMPLATE_NAME:
+      z.string()
+        .default(
+          "document_reminder"
+        ),
+
+    WHATSAPP_TEMPLATE_LANGUAGE:
+      z.string()
+        .default(
+          "es"
+        )
+  });
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+const rawEnvironment = {
+  ...process.env,
+
+  FRONTEND_URL:
+    process.env.FRONTEND_URL ||
+    deploymentUrl,
+
+  APP_URL:
+    process.env.APP_URL ||
+    deploymentUrl
+};
+
+/* =====================================================
+   VALIDACIÓN
+===================================================== */
 
 const parsed =
   envSchema.safeParse(
-    process.env
+    rawEnvironment
   );
 
-if (!parsed.success) {
+if (
+  !parsed.success
+) {
   console.error("");
   console.error(
-    "❌ Error en variables de entorno"
+    "======================================"
+  );
+
+  console.error(
+    "❌ VARIABLES DE ENTORNO INVÁLIDAS"
+  );
+
+  console.error(
+    "======================================"
   );
 
   console.error(
@@ -118,10 +231,65 @@ if (!parsed.success) {
       .fieldErrors
   );
 
-  console.error("");
+  console.error(
+    "======================================"
+  );
 
-  process.exit(1);
+  throw new Error(
+    "Variables de entorno inválidas"
+  );
 }
 
-export const env =
+const env =
   parsed.data;
+
+/* =====================================================
+   VALIDAR SMTP
+===================================================== */
+
+if (
+  env.EMAIL_PROVIDER ===
+  "smtp"
+) {
+
+  if (
+    !env.SMTP_USER
+  ) {
+    throw new Error(
+      "EMAIL_PROVIDER=smtp requiere SMTP_USER"
+    );
+  }
+
+  if (
+    !env.SMTP_PASS
+  ) {
+    throw new Error(
+      "EMAIL_PROVIDER=smtp requiere SMTP_PASS"
+    );
+  }
+}
+
+/* =====================================================
+   VALIDAR WHATSAPP
+===================================================== */
+
+if (
+  env.WHATSAPP_PROVIDER ===
+    "meta" &&
+  (
+    !env.WHATSAPP_ACCESS_TOKEN ||
+    !env.WHATSAPP_PHONE_NUMBER_ID
+  )
+) {
+  throw new Error(
+    "WHATSAPP_PROVIDER=meta requiere WHATSAPP_ACCESS_TOKEN y WHATSAPP_PHONE_NUMBER_ID"
+  );
+}
+
+/* =====================================================
+   EXPORT
+===================================================== */
+
+export {
+  env
+};
