@@ -5,13 +5,8 @@ import {
 } from "node:fs";
 
 import {
-  dirname,
   resolve
 } from "node:path";
-
-import {
-  fileURLToPath
-} from "node:url";
 
 import {
   z
@@ -21,49 +16,71 @@ import {
    CARGAR .ENV LOCAL
 ===================================================== */
 
-const currentFile =
-  fileURLToPath(
-    import.meta.url
-  );
-
-const currentDir =
-  dirname(
-    currentFile
-  );
-
 /*
- * Funciona cuando se ejecuta desde:
+ * NO utilizamos import.meta.url.
  *
- * apps/api/src/config/env.ts
+ * Esto evita problemas cuando Netlify/esbuild
+ * empaqueta la aplicación.
  *
- * y también desde:
+ * Probamos posibles ubicaciones del .env
+ * solamente para desarrollo local.
  *
- * apps/api/dist/config/env.js
+ * En Netlify las variables vienen directamente
+ * desde process.env.
  */
-const rootEnvPath =
+
+const envCandidates = [
   resolve(
-    currentDir,
-    "../../../../.env"
-  );
+    process.cwd(),
+    ".env"
+  ),
 
-/*
- * En Netlify normalmente este archivo no existe.
- * En ese caso se utilizan directamente process.env.
- */
-if (
-  existsSync(
-    rootEnvPath
+  resolve(
+    process.cwd(),
+    "../../.env"
+  ),
+
+  resolve(
+    process.cwd(),
+    "../../../.env"
   )
+];
+
+for (
+  const envPath of
+  envCandidates
 ) {
-  dotenv.config({
-    path:
-      rootEnvPath
-  });
+
+  if (
+    existsSync(
+      envPath
+    )
+  ) {
+
+    dotenv.config({
+      path:
+        envPath
+    });
+
+    console.log(
+      `[ENV] Archivo local cargado`
+    );
+
+    break;
+  }
 }
 
 /* =====================================================
-   URL DE PRODUCCION
+   URL DEL DEPLOY
 ===================================================== */
+
+/*
+ * Netlify proporciona URL.
+ *
+ * Ejemplo:
+ *
+ * https://sysreminder.netlify.app
+ */
 
 const deploymentUrl =
   process.env.URL ||
@@ -254,12 +271,13 @@ const envSchema =
 ===================================================== */
 
 const rawEnvironment = {
+
   ...process.env,
 
   /*
-   * En Netlify podemos utilizar automáticamente
-   * process.env.URL si FRONTEND_URL o APP_URL
-   * no fueron configuradas manualmente.
+   * Si estamos en Netlify y no configuramos
+   * FRONTEND_URL o APP_URL manualmente,
+   * utilizamos process.env.URL.
    */
 
   FRONTEND_URL:
@@ -272,7 +290,7 @@ const rawEnvironment = {
 };
 
 /* =====================================================
-   VALIDAR
+   VALIDAR VARIABLES
 ===================================================== */
 
 const parsed =
@@ -314,11 +332,15 @@ if (
   );
 }
 
+/* =====================================================
+   ENV FINAL
+===================================================== */
+
 const env =
   parsed.data;
 
 /* =====================================================
-   VALIDACION SMTP
+   VALIDAR SMTP
 ===================================================== */
 
 if (
@@ -329,6 +351,7 @@ if (
   if (
     !env.SMTP_USER
   ) {
+
     throw new Error(
       "EMAIL_PROVIDER=smtp requiere SMTP_USER"
     );
@@ -337,6 +360,7 @@ if (
   if (
     !env.SMTP_PASS
   ) {
+
     throw new Error(
       "EMAIL_PROVIDER=smtp requiere SMTP_PASS"
     );
@@ -344,7 +368,7 @@ if (
 }
 
 /* =====================================================
-   VALIDACION WHATSAPP
+   VALIDAR WHATSAPP
 ===================================================== */
 
 if (
@@ -360,6 +384,26 @@ if (
     "WHATSAPP_PROVIDER=meta requiere WHATSAPP_ACCESS_TOKEN y WHATSAPP_PHONE_NUMBER_ID"
   );
 }
+
+/* =====================================================
+   INFORMACION DE ARRANQUE
+===================================================== */
+
+console.log(
+  `[ENV] Entorno: ${env.NODE_ENV}`
+);
+
+console.log(
+  `[ENV] Aplicación: ${env.APP_URL}`
+);
+
+console.log(
+  `[ENV] Email provider: ${env.EMAIL_PROVIDER}`
+);
+
+console.log(
+  `[ENV] WhatsApp provider: ${env.WHATSAPP_PROVIDER}`
+);
 
 /* =====================================================
    EXPORT
