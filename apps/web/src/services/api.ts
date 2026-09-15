@@ -1,8 +1,3 @@
-const API_URL =
-  import.meta.env.DEV
-    ? "http://localhost:4000"
-    : "";
-
 interface RequestOptions
   extends RequestInit {
   body?: BodyInit | null;
@@ -13,13 +8,27 @@ export async function apiRequest<T>(
   options: RequestOptions = {}
 ): Promise<T> {
 
+  /* =================================================
+     NORMALIZAR URL
+  ================================================= */
+
   const normalizedEndpoint =
     endpoint.startsWith("/")
       ? endpoint
       : `/${endpoint}`;
 
+  /*
+   * LOCAL:
+   *
+   * /api/... -> Vite proxy -> localhost:4000
+   *
+   * PRODUCCION:
+   *
+   * /api/... -> Netlify -> Function -> Express
+   */
+
   const url =
-    `${API_URL}${normalizedEndpoint}`;
+    normalizedEndpoint;
 
   console.log(
     "[API REQUEST]",
@@ -45,6 +54,10 @@ export async function apiRequest<T>(
           }
         }
       );
+
+    /* =================================================
+       LEER RESPUESTA
+    ================================================= */
 
     const contentType =
       response.headers.get(
@@ -74,14 +87,23 @@ export async function apiRequest<T>(
       };
     }
 
+    /* =================================================
+       ERROR HTTP
+    ================================================= */
+
     if (
       !response.ok
     ) {
+
       throw new Error(
         data.message ||
         `Error ${response.status}`
       );
     }
+
+    /* =================================================
+       OK
+    ================================================= */
 
     return data as T;
 
@@ -98,6 +120,7 @@ export async function apiRequest<T>(
     if (
       error instanceof TypeError
     ) {
+
       throw new Error(
         "No fue posible conectar con el servidor."
       );

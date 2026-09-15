@@ -5,4 +5,6 @@ import {
 } from "../../apps/api/dist/app.js";
 
 export const handler =
-  serverless(app);
+  serverless(
+    app
+  );

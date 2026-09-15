@@ -1,7 +1,43 @@
-import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import {
+  defineConfig
+} from "vite";
 
-// https://vite.dev/config/
+import react from "@vitejs/plugin-react";
+
 export default defineConfig({
-  plugins: [react()],
-})
+
+  plugins: [
+    react()
+  ],
+
+  server: {
+
+    port:
+      5173,
+
+    proxy: {
+
+      "/api": {
+
+        target:
+          "http://localhost:4000",
+
+        changeOrigin:
+          true,
+
+        secure:
+          false
+      }
+    }
+  },
+
+  build: {
+
+    /*
+     * Solo aumenta el límite de advertencia.
+     * No afecta el funcionamiento.
+     */
+    chunkSizeWarningLimit:
+      700
+  }
+});

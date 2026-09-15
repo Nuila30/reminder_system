@@ -1,11 +1,68 @@
-import "dotenv/config";
+import dotenv from "dotenv";
+
+import {
+  existsSync
+} from "node:fs";
+
+import {
+  dirname,
+  resolve
+} from "node:path";
+
+import {
+  fileURLToPath
+} from "node:url";
 
 import {
   z
 } from "zod";
 
 /* =====================================================
-   URL DEL DEPLOY
+   CARGAR .ENV LOCAL
+===================================================== */
+
+const currentFile =
+  fileURLToPath(
+    import.meta.url
+  );
+
+const currentDir =
+  dirname(
+    currentFile
+  );
+
+/*
+ * Funciona cuando se ejecuta desde:
+ *
+ * apps/api/src/config/env.ts
+ *
+ * y también desde:
+ *
+ * apps/api/dist/config/env.js
+ */
+const rootEnvPath =
+  resolve(
+    currentDir,
+    "../../../../.env"
+  );
+
+/*
+ * En Netlify normalmente este archivo no existe.
+ * En ese caso se utilizan directamente process.env.
+ */
+if (
+  existsSync(
+    rootEnvPath
+  )
+) {
+  dotenv.config({
+    path:
+      rootEnvPath
+  });
+}
+
+/* =====================================================
+   URL DE PRODUCCION
 ===================================================== */
 
 const deploymentUrl =
@@ -18,6 +75,10 @@ const deploymentUrl =
 
 const envSchema =
   z.object({
+
+    /* =================================================
+       ENTORNO
+    ================================================= */
 
     NODE_ENV:
       z.enum([
@@ -50,16 +111,20 @@ const envSchema =
         ),
 
     /* =================================================
-       APLICACIÓN
+       APLICACION
     ================================================= */
 
     FRONTEND_URL:
       z.string()
-        .url(),
+        .url(
+          "FRONTEND_URL debe ser una URL válida"
+        ),
 
     APP_URL:
       z.string()
-        .url(),
+        .url(
+          "APP_URL debe ser una URL válida"
+        ),
 
     /* =================================================
        SEGURIDAD
@@ -185,11 +250,17 @@ const envSchema =
   });
 
 /* =====================================================
-   VARIABLES
+   PREPARAR VARIABLES
 ===================================================== */
 
 const rawEnvironment = {
   ...process.env,
+
+  /*
+   * En Netlify podemos utilizar automáticamente
+   * process.env.URL si FRONTEND_URL o APP_URL
+   * no fueron configuradas manualmente.
+   */
 
   FRONTEND_URL:
     process.env.FRONTEND_URL ||
@@ -201,7 +272,7 @@ const rawEnvironment = {
 };
 
 /* =====================================================
-   VALIDACIÓN
+   VALIDAR
 ===================================================== */
 
 const parsed =
@@ -212,9 +283,10 @@ const parsed =
 if (
   !parsed.success
 ) {
+
   console.error("");
   console.error(
-    "======================================"
+    "=============================================="
   );
 
   console.error(
@@ -222,7 +294,7 @@ if (
   );
 
   console.error(
-    "======================================"
+    "=============================================="
   );
 
   console.error(
@@ -232,8 +304,10 @@ if (
   );
 
   console.error(
-    "======================================"
+    "=============================================="
   );
+
+  console.error("");
 
   throw new Error(
     "Variables de entorno inválidas"
@@ -244,7 +318,7 @@ const env =
   parsed.data;
 
 /* =====================================================
-   VALIDAR SMTP
+   VALIDACION SMTP
 ===================================================== */
 
 if (
@@ -270,7 +344,7 @@ if (
 }
 
 /* =====================================================
-   VALIDAR WHATSAPP
+   VALIDACION WHATSAPP
 ===================================================== */
 
 if (
@@ -281,6 +355,7 @@ if (
     !env.WHATSAPP_PHONE_NUMBER_ID
   )
 ) {
+
   throw new Error(
     "WHATSAPP_PROVIDER=meta requiere WHATSAPP_ACCESS_TOKEN y WHATSAPP_PHONE_NUMBER_ID"
   );
