@@ -13,8 +13,18 @@ export async function apiRequest<T>(
   options: RequestOptions = {}
 ): Promise<T> {
 
+  const normalizedEndpoint =
+    endpoint.startsWith("/")
+      ? endpoint
+      : `/${endpoint}`;
+
   const url =
-    `${API_URL}${endpoint}`;
+    `${API_URL}${normalizedEndpoint}`;
+
+  console.log(
+    "[API REQUEST]",
+    url
+  );
 
   try {
 
@@ -39,15 +49,16 @@ export async function apiRequest<T>(
     const contentType =
       response.headers.get(
         "content-type"
-      );
+      ) || "";
 
     let data: any;
 
     if (
-      contentType?.includes(
+      contentType.includes(
         "application/json"
       )
     ) {
+
       data =
         await response.json();
 
