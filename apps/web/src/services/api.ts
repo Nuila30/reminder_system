@@ -1,7 +1,7 @@
 const API_URL =
   import.meta.env.DEV
     ? "http://localhost:4000"
-    : "https://sysreminder.netlify.app/login";
+    : "";
 
 interface RequestOptions
   extends RequestInit {
@@ -50,14 +50,16 @@ export async function apiRequest<T>(
     ) {
       data =
         await response.json();
+
     } else {
+
       const text =
         await response.text();
 
       data = {
         message:
           text ||
-          "Respuesta inválida del servidor"
+          `Respuesta inválida del servidor (${response.status})`
       };
     }
 
@@ -83,10 +85,7 @@ export async function apiRequest<T>(
     );
 
     if (
-      error instanceof TypeError &&
-      error.message.includes(
-        "fetch"
-      )
+      error instanceof TypeError
     ) {
       throw new Error(
         "No fue posible conectar con el servidor."
