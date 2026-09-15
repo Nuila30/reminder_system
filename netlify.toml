@@ -1,5 +1,5 @@
 [build]
-  command = "pnpm --filter @reminder/api build && pnpm --dir apps/web build"
+  command = "pnpm run build"
   publish = "apps/web/dist"
 
 [functions]
